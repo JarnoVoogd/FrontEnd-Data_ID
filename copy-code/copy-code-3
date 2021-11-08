@@ -1,0 +1,160 @@
+
+
+// data.json bestand ophalen
+const data = require('./data.json');
+
+// Arrays aanmaken om de data in te zetten
+let huisdierData = [];
+let favoDatumData = [];
+let correcteData = [];
+let somPerSoort = [];
+
+
+// For loop die elk array in het data.json bestand langs gaat
+    // Specefiek zoekt naar 'favourite-pet' en die data in het huisdierData array zet
+    // Het schoont de data op, het geeft elk woord een hoofdletter
+    //Tot slot maakt het gebruik van de functie twoSpaces, uitleg bij de betreffende functie
+for (let i = 0; i < data.length; i++) {
+    huisdierData.push(twoSpaces(data[i]['favourite-pet']));
+    huisdierData[i] = huisdierData[i]
+        .charAt(0)
+        .toUpperCase() + huisdierData[i]
+        .substring(1)
+
+    huisdierData[i] = huisdierData[i]
+        .replace('Capricornis sumatraensis', 'Bosgems');
+
+    favoDatumData.push(data[i]['favourite-date']);
+    favoDatumData[i] = favoDatumData[i]
+        .split("/")
+
+
+} 
+
+
+// Deze functie checkt elke string op spaties
+    // Bij elke spatie splitst hij de string op
+    // Bij meer dan 2 resulterende strings verwijderd hij alles behalve de eerste string
+    // Dit garandeerd dat dierennamen met twee delen blijven staan maar alle input met ' of ' erin na het eerste deel verwijderd worden
+function twoSpaces(string){
+    let array = string.split(" ");
+    if (array.length > 2) {
+    return array[0];
+ }
+ return string
+}
+
+
+
+
+
+// Hier ga ik elke string in huisdierData langs en telt ze per soort op
+    // Is een soort string nog niet voorbijgekomen is het aantal dus 0, komt de string wel voorbij wordt +1 gedaan
+huisdierData.forEach((i) =>{ somPerSoort[i] = (somPerSoort[i]||0) + 1;});
+
+
+
+
+// Dit is een functie waarin elk array met een datum erin wordt nagelopen en omgezet naar romeinse cijfers.
+// Door gebruik te maken van een forEach kan dit een stuk simpeler dan met een for loop
+favoDatumData.forEach((datum) =>{ 
+    datum[0]=convertToRoman(datum[0]);
+    datum[1]=convertToRoman(datum[1]);
+    datum[2]=convertToRoman(datum[2]);
+    favoDatumData.join('-');
+});
+
+
+for (let i = 0; i < favoDatumData.length; i++) {
+    correcteData.push(rejoin(favoDatumData[i]));
+}
+
+
+
+function rejoin(string){
+    let array = string.join('-');
+    return array;
+ }
+ 
+
+
+
+
+// Ik heb hier een functie van internet gehaald, link hieronder
+// https://stackoverflow.com/questions/9083037/convert-a-number-into-a-roman-numeral-in-javascript
+// Deze functie zet arabische getallen om in romeinse getallen.
+function convertToRoman(num) {
+    //create key:value pairs
+    var romanLookup = {M:1000, D:500, C:100, L:50, X:10, V:5, I:1};
+    var roman = [];
+    var romanKeys = Object.keys(romanLookup);
+    var curValue;
+    var index;
+    var count = 1;
+    
+    for(var numeral in romanLookup){
+      curValue = romanLookup[numeral];
+      index = romanKeys.indexOf(numeral);
+      
+      while(num >= curValue){
+        
+        if(count < 4){
+          //push up to 3 of the same numeral
+          roman.push(numeral);
+        } else {
+          //else we had to push four, so we need to convert the numerals 
+          //to the next highest denomination "coloring-up in poker speak"
+          
+          //Note: We need to check previous index because it might be part of the current number.
+          //Example:(9) would attempt (VIIII) so we would need to remove the V as well as the I's
+          //otherwise removing just the last three III would be incorrect, because the swap 
+          //would give us (VIX) instead of the correct answer (IX)
+          if(roman.indexOf(romanKeys[index - 1]) > -1){
+            //remove the previous numeral we worked with 
+            //and everything after it since we will replace them
+            roman.splice(roman.indexOf(romanKeys[index - 1]));
+            //push the current numeral and the one that appeared two iterations ago; 
+            //think (IX) where we skip (V)
+            roman.push(romanKeys[index], romanKeys[index - 2]);
+          } else {
+            //else Example:(4) would attemt (IIII) so remove three I's and replace with a V 
+            //to get the correct answer of (IV)
+            
+            //remove the last 3 numerals which are all the same
+            roman.splice(-3);
+            //push the current numeral and the one that appeared right before it; think (IV)
+            roman.push(romanKeys[index], romanKeys[index - 1]);
+          }
+        }
+        //reduce our number by the value we already converted to a numeral
+        num -= curValue;
+        count++;
+      }
+      count = 1;
+    }
+    return roman.join("");
+  }
+  
+
+// Hier maak ik een variabele aan, hierin laat ik mijn array, correcteData
+    // omzetten naar 
+let testString = correcteData.toString()
+
+let aantalKeer = {
+    M: testString.replaceAll(/[^M]/g, "").length,
+    C: testString.replaceAll(/[^C]/g, "").length,
+    X: testString.replaceAll(/[^X]/g, "").length,
+    V: testString.replaceAll(/[^V]/g, "").length,
+    I: testString.replaceAll(/[^I]/g, "").length
+}
+
+
+
+
+// Hier roep ik de opgeslagen data in de arrays op
+console.log(huisdierData);
+console.log(somPerSoort);
+console.log(correcteData)
+console.log('Hoevaak komt elk romeinse cijfer voor?', aantalKeer)
+
+
