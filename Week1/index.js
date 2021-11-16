@@ -40,11 +40,13 @@ for (let i = 0; endFetch < 5; i++) {
 Promise.all(allFetches).then(allePersonen => {
   for (let i = 0; i < allePersonen.length; i++) {
     personenData.push(allePersonen[i]["eye_color"]);
-
+    personenData[i] = personenData[i]
+      .replace(", ", "-")
+      .replace("unknown", "silver");
   }
   // Here I use a ForEach to run through somPerSoort and add up each type of eye color.
   personenData.forEach(i => {
     somPerSoort[i] = (somPerSoort[i] || 0) + 1;
   
 });
-})
+
