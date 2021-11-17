@@ -10,23 +10,27 @@
     </div>
   </head> 
   <body>
-
-  <div id='stars'></div>
-  <div id='stars2'></div>
-  <div id='stars3'></div>
-    <!-- <div style="text-align: center;">
+  <div id='hemel'>
+    <div id='stars'></div>
+    <div id='stars2'></div>
+    <div id='stars3'></div>
+  </div>  <!-- <div style="text-align: center;">
       <h1>data visualisatie </h1>
       <div id="d3-container"></div>
     </div> -->
     <h1>Star Wars Characters - Eye colors</h1>
   
   <div>
-    <h2>Filter:</h2>
-    <form>
-      <label><input type="radio" name="eyeColor" value="all" checked id="filter-allColors"/>All colors</label>
-      <label><input type="radio" name="eyeColor" value="human" id="filter-humanColors"/>Human colors</label>
-      <label><input type="radio" name="eyeColor" value="extraterrestrial" id="filter-extraterrestrialColors"/>Extraterrestrial colors</label>
-    </form>
+    <div id="forms">
+      <form id="een">
+        <label><input type="radio" name="eyeColor" value="everything" checked id="filter-allColors"/>All colors</label>
+        <label><input type="radio" name="eyeColor" value="human" id="filter-humanColors"/>Human colors</label>
+        <label><input type="radio" name="eyeColor" value="extraterrestrial" id="filter-extraterrestrialColors"/>Extraterrestrial colors</label>
+      </form>
+      <form id="twee">
+        <label><input type="range" min="1" max="20" value="20" class="slider" id="filter-amount"/>Aantal</label>
+      </form>
+    </div>
   </div>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="index.js" type="module"></script>
