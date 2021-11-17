@@ -4,22 +4,33 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <link href="style.css" rel="stylesheet" />
-
-    <title>oefenen met svg</title>
-  </head>
+    <title>D3 Visualisatie</title>
+    
+    </div>
+  </head> 
   <body>
-    <h1>test</h1>
-    <svg width="500" height="350">
-        <rect width="300" height="150" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)"></rect>
-    </svg>   
-    <svg width="720" height="120">
-      <circle cx="40" cy="60" r="10"></circle>
-      <circle cx="80" cy="60" r="10"></circle>
-      <circle cx="120" cy="60" r="10"></circle>
-    </svg>
+
+  <div id='stars'></div>
+  <div id='stars2'></div>
+  <div id='stars3'></div>
+    <!-- <div style="text-align: center;">
+      <h1>data visualisatie </h1>
+      <div id="d3-container"></div>
+    </div> -->
+    <h1>Star Wars Characters - Eye colors</h1>
+  
+  <div>
+    <h2>Filter:</h2>
+    <form>
+      <label><input type="radio" name="eyeColor" value="all" checked id="filter-allColors"/>All colors</label>
+      <label><input type="radio" name="eyeColor" value="human" id="filter-humanColors"/>Human colors</label>
+      <label><input type="radio" name="eyeColor" value="extraterrestrial" id="filter-extraterrestrialColors"/>Extraterrestrial colors</label>
+    </form>
+  </div>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="index.js" type="module"></script>
   </body>
 </html>
 
-<script src="index.js" type="module"></script>
+

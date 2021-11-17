@@ -52,7 +52,7 @@ Promise.all(allFetches).then(allePersonen => {
   // with the keys selected I can map them and name them key for now.
   // After this I make "test" return an object, in this object I
   // use the name "key" to call for the saved keys  
-  const test = Object.keys(somPerSoort).map(key => {
+  const test = Object.keys(somPerSoort) (key => {
     return { color: key, amount: somPerSoort[key] };
 
   });
@@ -65,6 +65,7 @@ function testF(data) {
   // console.log(data)
   barChartData = data;
   update(barChartData);
+  console.log(barChartData)
   // deedrie();
 }
 
@@ -137,38 +138,36 @@ function update(new_data) {
   rect.select("title").text(d => d.color);
 }
 
-//interactivity
-d3.select("#filter-humanColors").on("change", function () {
+d3.select("#filter-allColors").on("change", function () {
   // This will be triggered when the user selects or unselects the checkbox
-  const checked = d3.select(this).property("checked");
-  if (checked === true) {
-    // Checkbox was just checked
 
-    // Keep only data element whose country is US
+  const filtered_data = barChartData.map(d => d)
+    update(filtered_data); // Update the chart with all the data we have
+  }
+);
+
+d3.select("#filter-humanColors").on("change", function () {
+  
     const filtered_data = barChartData.filter(d => d.color === "blue" || d.color === "brown" || d.color === "hazel" || d.color === "blue-gray");
 
     update(filtered_data); // Update the chart with the filtered data
-  } else {
-    // Checkbox was just unchecked
-    update(barChartData); // Update the chart with all the data we have
-  }
+
+    console.log(filtered_data)
+  
 });
 
 d3.select("#filter-extraterrestrialColors").on("change", function () {
-  // This will be triggered when the user selects or unselects the checkbox
-  const checked = d3.select(this).property("checked");
-  if (checked === true) {
-    // Checkbox was just checked
-
-    // Keep only data element whose country is US
+  
     const filtered_data = barChartData.filter(d => d.color === "yellow" || d.color === "red" || d.color === "black" || d.color === "orange" || d.color === "pink" || d.color === "silver" || d.color === "gold" || d.color === "green-yellow" || d.color === "white");
 
     update(filtered_data); // Update the chart with the filtered data
-  } else {
-    // Checkbox was just unchecked
-    update(barChartData); // Update the chart with all the data we have
-  }
+  
+
+
+
 });
+
+
 // d3.selectAll('input[type="checkbox"]').on("change", function () {
 //   // This will be triggered when the user selects or unselects the checkbox
 //   let waarde = this.value
