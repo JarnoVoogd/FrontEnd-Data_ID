@@ -51,21 +51,18 @@ Promise.all(allFetches).then(allePersonen => {
   // Here I use Object.keys to select all keys in my array somPerSoort
   // with the keys selected I can map them and name them key for now.
   // After this I make "test" return an object, in this object I
-  // use the name "key" to call for the saved keys  
+  // use the name "key" to call for the saved keys
   const test = Object.keys(somPerSoort).map(key => {
     return { color: key, amount: somPerSoort[key] };
-
   });
   testF(test);
 });
 
 // In this function I first replace anything thats in barChartData with the data given as parameter
-// After this I run function "Update" which I need for my D3 visualisation to work  
+// After this I run function "Update" which I need for my D3 visualisation to work
 function testF(data) {
-  // console.log(data)
   barChartData = data;
   update(barChartData);
-  // deedrie();
 }
 
 // These are just "styling" constantes I use to create and define attributes etc.
@@ -95,12 +92,11 @@ const g_xaxis = g.append("g").attr("class", "x axis");
 const yaxis = d3.axisLeft().scale(yscale);
 const g_yaxis = g.append("g").attr("class", "y axis");
 
-
 function update(new_data) {
-  //update the scales
+  // Update the scales with the API data
   xscale.domain([0, d3.max(new_data, d => d.amount)]);
   yscale.domain(new_data.map(d => d.color));
-  //render the axis
+  // Render the axis
   g_xaxis.transition().call(xaxis);
   g_yaxis.transition().call(yaxis);
 
@@ -119,7 +115,7 @@ function update(new_data) {
         return rect_enter;
       },
       // UPDATE
-      // update existing elements
+      // update existing elements with new data (if there is any)
       update => update,
       // EXIT
       // elements that aren't associated with data
@@ -133,99 +129,72 @@ function update(new_data) {
     .attr("height", yscale.bandwidth())
     .attr("width", d => xscale(d.amount))
     .attr("y", d => yscale(d.color))
-    .attr("class", "glow")
+    .attr("class", "glow");
 
   rect.select("title").text(d => d.amount);
 }
 
+// Creating of arrays in which I store the eye colors, seperated into human and extraterrestrial colors.
+const human = ["blue", "brown", "blue-gray", "hazel"];
+const ext = ["yellow", "red", "black", "orange", "pink", "silver", "red-blue", "gold", "green-yellow", "white"];
 
+// A const with an object in which I store which colors belong in the different categories.
+const colorMap = {
+  human: human,
+  ext: ext,
+  all: [...human, ...ext]
+};
+
+// This function takes a given race and puts that races' eye colors into "validColors".
+// After this it filters all data with the selected races' eye colors and puts them into 
+// "filtered_data".
+// "filtered data" is then returned.
+function filterData (selectedRace){
+  const validColors = colorMap[selectedRace];
+  const filtered_data = barChartData.filter(c =>
+    validColors.find(vc => vc === c.color)
+  );
+  return filtered_data;
+};
+
+// Here "selectedRace is created and made equal to "all" because the data starts with all races combined.
+let selectedRace = "all";
+
+// This is the "filter"(technically not a filter but for lack of a better term...) for when the 
+// "all" radio button is checked. 
 d3.select("#filter-allColors").on("change", function () {
+  selectedRace = "all";
   update(barChartData); // Update the chart with the filtered data
 });
 
-
-
+// This is the filter for when the "human" radio button is checked.
+// It sets "selectedRace" equal to "human" and then runs function "filterData" with as parameter
+// "selectedRace", which is set equal to human. So all data is filtered against the "human" eye colors.
 d3.select("#filter-humanColors").on("change", function () {
-  const filtered_data = barChartData.filter(
-    d =>
-      d.color === "blue" ||
-      d.color === "brown" ||
-      d.color === "hazel" ||
-      d.color === "blue-gray"
-  );
-
+  selectedRace = "human";
+  const filtered_data = filterData(selectedRace);
   update(filtered_data); // Update the chart with the filtered data
 });
 
+// This is the filter for when the "extraterrestrial" radio button is checked.
+// It sets "selectedRace" equal to "extraterrestrial" and then runs function "filterData" with as parameter
+// "selectedRace", which is set equal to extraterrestrial. So all data is filtered against the "extraterrestrial" eye colors.
 d3.select("#filter-extraterrestrialColors").on("change", function () {
-  const filtered_data = barChartData.filter(
-    d =>
-      d.color === "yellow" ||
-      d.color === "red" ||
-      d.color === "black" ||
-      d.color === "orange" ||
-      d.color === "pink" ||
-      d.color === "silver" ||
-      d.color === "gold" ||
-      d.color === "green-yellow" ||
-      d.color === "white"
-  );
-
+  selectedRace = "ext";
+  const filtered_data = filterData(selectedRace);
   update(filtered_data); // Update the chart with the filtered data
 });
 
-
-d3.select('input[type="range"]').on('change', function() {
-  let waarde = this.value
-
-  // if ("#filter-extraterrestrialColors" === checked){
-
-    
-  // }
-  const filtered_data = barChartData.filter((d) => d.amount >= waarde)
-
+// This is the amount (slider) filter. It gives the option to filter the given data against the amount of
+// occurences. In other words, if the slider is set to 8 only the eye colors that occur 8 times or more will 
+// be displayed.
+// First I create "aantal" which I set equal to this.value, which means the current/latest value input into the slider
+// I then filter all data against the selected race data, same as I did with previous filters.
+// After this I filter the already filtered "race" data again, I filter it against the current value of the slider.
+d3.select('input[type="range"]').on("change", function () {
+  let aantal = this.value;
+  const filteredRaceData = filterData(selectedRace);
+  const filtered_data = filteredRaceData.filter(d => d.amount >= aantal);
   update(filtered_data); // Update the chart with the filtered data
 });
-
-
-
-
-
-// d3.selectAll('input[type="checkbox"]').on("change", function () {
-//   // This will be triggered when the user selects or unselects the checkbox
-//   let waarde = this.value
-//   const checked = d3.select(this).property("checked");
-//   if (checked === true) {
-//     // Checkbox was just checked
-
-//     // Keep only data element whose country is US
-//     const filtered_data = barChartData.filter(d => d.color === waarde);
-
-//     update(filtered_data); // Update the chart with the filtered data
-//   } else {
-//     // Checkbox was just unchecked
-//     update(barChartData); // Update the chart with all the data we have
-//   }
-// });
-
-// d3.selectAll('input[type="checkbox"]').on("change", function () {
-//   let waarde = this.value;
-//   console.log(waarde);
-//   const filtered_data = barChartData.filter(d => d.color === waarde);
-//   update(filtered_data); // Update the chart with the filtered data
-// });
-
-function deedrie() {}
-// let circle = d3.selectAll("circle");
-// let h1 = d3.selectAll("h1");
-
-// circle.style("fill", "steelblue");
-// circle.attr("r", 30).attr("cx", function() { return Math.random() * 360;})
-
-// h1.style("fill", "steelblue");
-// h1.attr("cx",function(){return Math.random() * 360})
-
-// `python -m SimpleHTTPServer
-
-
 
