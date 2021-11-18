@@ -28,7 +28,10 @@
         <label><input type="radio" name="eyeColor" value="extraterrestrial" id="filter-extraterrestrialColors"/>Extraterrestrial colors</label>
       </form>
       <form id="twee">
-        <label><input type="range" min="1" max="20" value="20" class="slider" id="filter-amount"/>Aantal</label>
+        <p>Oogkleuren die evenveel of vaker voorkomen dan:</p>
+        <label><input type="range" min="1" max="20" value="1" class="slider" id="filter-amount" oninput="this.nextElementSibling.value = this.value"/>
+        <output>1</output>
+        </label>
       </form>
     </div>
   </div>
