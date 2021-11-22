@@ -3,7 +3,7 @@
 
 // import fetch from "node-fetch";
 
-// Creating an array to push data to
+// Creating an array/object to push data to
 let allFetches = [];
 let somPerSoort = {};
 let personenData = [];
